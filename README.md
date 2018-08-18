@@ -1,4 +1,4 @@
-# React-Material-boilerplate
+# Timers-react-material
 
 Now you can run your local server:
 ```sh
