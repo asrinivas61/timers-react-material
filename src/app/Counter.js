@@ -8,13 +8,14 @@ export default class Counter extends Component {
 		super(props, context);
     this.state = {
     	hours: 0,
-    	minutes: 5,
+    	minutes: 10,
     	seconds: 0,
     	isStarted: false,
     	isStopped: false
     };
     this.startCounter = this.startCounter.bind(this);
     this.stopCounter = this.stopCounter.bind(this);
+		this.reset = this.reset.bind(this);
 	}
 
 	componentWillMount() {
@@ -28,31 +29,49 @@ export default class Counter extends Component {
 
 	startCounter() {
 		let { hours, minutes, seconds, isStopped } = this.state;
+		this.setState({isStopped:false});
 
 		--seconds;
 		if(seconds<0) {
 			seconds = 59;
 			--minutes;
 		}
-		if(minutes<0 && !(hours<0)) {
+		if(minutes<0) {
 			minutes = 59;
 			--hours;
 		}
 
+		if (+hours<0) {
+			this.reset();
+			return;
+		}
+
+		if(!isStopped) {
+			setTimeout(this.startCounter, 1000);
+		}else {
+			return;
+		}
+
 		this.setState({
-			hours: (hours<10)?`0${+hours}`:hours,
+			hours: hours,
 			minutes: (minutes<10)?`0${+minutes}`:minutes,
 			seconds: (seconds<10)?`0${+seconds}`:seconds,
-			isStarted: true,
-			isStopped: false
+			isStarted: true
 		});
-
-		if(!isStopped)
-			setTimeout(this.startCounter, 1000);
 	}
 
 	stopCounter() {
+		this.setState({isStopped: true, isStarted: false});
+	}
 
+	reset() {
+		this.setState({
+			hours: '00',
+    	minutes: '10',
+    	seconds: '00',
+    	isStarted: false,
+    	isStopped: true
+		})
 	}
 
 	render() {
@@ -67,6 +86,7 @@ export default class Counter extends Component {
 						<div className="btns">
 							<div className="btns-cover">
 								<RaisedButton label="Start" backgroundColor="#a4c639" onClick={this.startCounter} disabled={isStarted} />
+								<RaisedButton label="Reset" primary={true} onClick={this.reset} />
 								<RaisedButton label="Stop" secondary={true} onClick={this.stopCounter} disabled={isStopped} />
 							</div>
 						</div>

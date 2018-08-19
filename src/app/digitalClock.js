@@ -35,6 +35,7 @@ export default class DigitalClock extends Component {
 		setTimeout(this.showTime, 1000);
 	}
 
+
 	render() {
 		return (
 			<div className="wrapper">
